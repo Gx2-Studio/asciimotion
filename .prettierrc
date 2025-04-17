@@ -1,0 +1,32 @@
+{
+  "printWidth": 100,
+  "tabWidth": 2,
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "none",
+  "bracketSpacing": true,
+  "bracketSameLine": true,
+  "htmlWhitespaceSensitivity": "css",
+  "singleAttributePerLine": false,
+  "endOfLine": "lf",
+  "arrowParens": "avoid",
+  "quoteProps": "as-needed",
+  "jsxSingleQuote": false,
+  "proseWrap": "never",
+  "overrides": [
+    {
+      "files": "*.html",
+      "options": {
+        "parser": "html"
+      }
+    },
+    {
+      "files": "*.js",
+      "options": {
+        "parser": "babel",
+        "semi": false,
+        "trailingComma": "none"
+      }
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": ["prettier"],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "script"
+  },
+  "rules": {
+    "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0, "maxBOF": 0 }],
+    "no-unused-vars": "off",
+    "no-undef": "off",
+    "no-case-declarations": "off",
+    "max-len": ["warn", { "code": 100, "ignoreComments": true, "ignoreStrings": true }],
+    "padded-blocks": ["error", "never"],
+    "padding-line-between-statements": [
+      "error",
+      { "blankLine": "always", "prev": "function", "next": "function" },
+      { "blankLine": "always", "prev": "class", "next": "*" },
+      { "blankLine": "always", "prev": "*", "next": "class" },
+      { "blankLine": "always", "prev": "block-like", "next": "block-like" },
+      {
+        "blankLine": "always",
+        "prev": ["multiline-const", "multiline-let", "multiline-var"],
+        "next": "*"
+      },
+      { "blankLine": "always", "prev": "*", "next": "return" }
+    ],
+    "lines-between-class-members": ["error", "always"],
+    "space-before-function-paren": ["warn", "always"],
+    "brace-style": ["warn", "1tbs", { "allowSingleLine": true }],
+    "indent": ["warn", 2, { "SwitchCase": 1 }],
+    "curly": ["warn", "all"],
+    "comma-dangle": ["warn", "never"],
+    "func-style": ["warn", "declaration", { "allowArrowFunctions": true }],
+    "spaced-comment": ["error", "always", { "markers": ["/"] }],
+    "multiline-comment-style": ["warn", "separate-lines"],
+    "lines-around-comment": [
+      "error",
+      {
+        "beforeBlockComment": true,
+        "afterBlockComment": false,
+        "beforeLineComment": true,
+        "afterLineComment": false,
+        "allowBlockStart": true,
+        "allowBlockEnd": true,
+        "allowObjectStart": true,
+        "allowObjectEnd": true,
+        "allowArrayStart": true,
+        "allowArrayEnd": true
+      }
+    ]
+  },
+  "globals": {
+    "document": true,
+    "window": true,
+    "navigator": true,
+    "currentImage": true,
+    "currentVideo": true,
+    "currentVideoFile": true,
+    "videoFrames": true,
+    "asciiFrames": true,
+    "currentFrameIndex": true,
+    "totalFrames": true,
+    "isVideoLoaded": true,
+    "isPlaying": true,
+    "animationInterval": true,
+    "settingsChangedWhilePaused": true,
+    "settingsChangedWhilePlaying": true,
+    "lastSettingsChangeTime": true,
+    "frameRegenerationDebounceTime": true,
+    "generateASCII": true,
+    "generateASCIIForFrame": true,
+    "downloadPNG": true,
+    "showNotification": true,
+    "exportVideo": true,
+    "exportAnimation": true,
+    "processAllFrames": true,
+    "displayFrame": true,
+    "togglePlayback": true,
+    "startPlayback": true,
+    "goToPreviousFrame": true,
+    "goToNextFrame": true,
+    "loadVideoMetadata": true,
+    "extractFramesFromVideo": true,
+    "generateContourASCII": true
+  }
+}

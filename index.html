@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASCIImotion - Gx2 Studio</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div class="layout">
+      <div class="small-screen-message">
+        <div class="project-title">ASCIImotion</div>
+        <p>This application requires a larger screen to function properly.</p>
+        <p>
+          Please use a device with a screen width of at least 800 pixels for the best experience.
+        </p>
+      </div>
+
+      <div class="content-wrapper">
+        <aside class="sidebar">
+          <div class="project-title">ASCIImotion</div>
+
+          <section class="control-group upload-group">
+            <h3>Media selection</h3>
+            <div class="control">
+              <div class="file-input-wrapper">
+                <input
+                  type="file"
+                  id="upload"
+                  accept="video/mp4,image/*"
+                  class="file-input-hidden" />
+                <label for="upload" class="file-input-label">Choose File</label>
+              </div>
+              <div
+                class="file-type-helper"
+                style="font-size: 0.8em; text-align: center; margin-top: 5px; opacity: 0.7">
+                Supported: MP4 videos, JPG, PNG, GIF images
+              </div>
+            </div>
+          </section>
+
+          <section class="control-group animation-settings" style="display: none">
+            <h3>Animation</h3>
+            <div class="control frame-count-control" style="display: none; margin-bottom: 15px">
+              <label
+                for="frameCount"
+                class="frame-label"
+                style="display: block; margin-bottom: 8px">
+                Frames:
+                <span
+                  id="frameHelp"
+                  tabindex="0"
+                  role="button"
+                  aria-label="Frame selection help"
+                  aria-expanded="false"
+                  aria-controls="frameTooltip"
+                  style="margin-left: 5px">
+                  i
+                </span>
+              </label>
+              <input
+                type="range"
+                id="frameCount"
+                min="10"
+                max="1000"
+                value="100"
+                style="width: 100%; margin-bottom: 8px" />
+              <div style="display: flex; justify-content: space-between; margin-bottom: 12px">
+                <span class="value-label" id="frameCountVal">100</span>
+                <span id="frameRecommended" class="frame-recommended" style="display: none">
+                  Recommended:
+                  <span id="frameRecommendedVal"></span>
+                </span>
+              </div>
+              <div
+                id="frameInstructions"
+                style="text-align: center; margin-bottom: 12px; font-style: italic">
+                Adjust frame count if desired, then click Process
+              </div>
+            </div>
+
+            <div class="control frame-recommendation-control" style="margin-bottom: 15px">
+              <div
+                id="frameFeedback"
+                class="frame-feedback"
+                style="display: none; padding: 8px; text-align: center"></div>
+            </div>
+
+            <div
+              class="control process-video-control"
+              style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-bottom: 15px;
+              ">
+              <button
+                id="processVideo"
+                style="display: none; padding: 8px 16px; margin-bottom: 5px">
+                Process Video
+              </button>
+              <div
+                id="processProgressContainer"
+                style="
+                  width: 100%;
+                  max-width: 200px;
+                  height: 2px;
+                  background-color: rgba(255, 255, 255, 0.2);
+                  display: none;
+                ">
+                <div
+                  id="processProgress"
+                  style="width: 0%; height: 100%; background-color: white"></div>
+              </div>
+            </div>
+
+            <div class="control playback-controls" style="display: none">
+              <div
+                class="frame-navigation"
+                style="display: flex; justify-content: center; margin-bottom: 10px">
+                <button id="prevFrame" aria-label="Previous frame">◀</button>
+                <button id="playAnimation" aria-label="Play or pause animation">Play</button>
+                <button id="nextFrame" aria-label="Next frame">▶</button>
+              </div>
+              <div style="text-align: center">
+                <span id="currentFrameDisplay" aria-live="polite">0/0</span>
+              </div>
+            </div>
+
+            <div class="control fps-control" style="display: none">
+              <label for="playbackSpeed">FPS:</label>
+              <input type="range" id="playbackSpeed" min="1" max="60" value="24" />
+              <span class="value-label" id="playbackSpeedVal">24</span>
+            </div>
+          </section>
+
+          <section class="control-group image-processing" style="display: none">
+            <h3>Image</h3>
+            <div class="control">
+              <label for="asciiWidth">Width:</label>
+              <input type="range" id="asciiWidth" min="20" max="300" value="150" />
+              <span class="value-label" id="asciiWidthVal">100</span>
+            </div>
+            <div class="control">
+              <label for="brightness">Brightness:</label>
+              <input type="range" id="brightness" min="-100" max="100" value="0" />
+              <span class="value-label" id="brightnessVal">0</span>
+            </div>
+            <div class="control">
+              <label for="contrast">Contrast:</label>
+              <input type="range" id="contrast" min="-100" max="100" value="0" />
+              <span class="value-label" id="contrastVal">0</span>
+            </div>
+            <div class="control">
+              <label for="blur">Blur:</label>
+              <input type="range" id="blur" min="0" max="10" step="0.01" value="0" />
+              <span class="value-label" id="blurVal">0</span>
+            </div>
+          </section>
+
+          <section class="control-group effects-settings" style="display: none">
+            <h3>Effects</h3>
+            <div class="control">
+              <label>
+                <input type="checkbox" id="invert" />
+                <span>Invert</span>
+              </label>
+              <label>
+                <input type="checkbox" id="ignoreWhite" checked />
+                <span>Skip White</span>
+              </label>
+              <label>
+                <input type="checkbox" id="ignoreGreen" />
+                <span>Skip Green</span>
+              </label>
+              <label>
+                <input type="checkbox" id="dithering" checked />
+                <span>Dither</span>
+              </label>
+            </div>
+            <div class="control">
+              <select id="ditherAlgorithm" aria-label="Dithering algorithm">
+                <option value="floyd" selected>Floyd-Steinberg</option>
+                <option value="atkinson">Atkinson</option>
+                <option value="noise">Noise</option>
+                <option value="ordered">Ordered</option>
+              </select>
+            </div>
+          </section>
+
+          <section class="control-group charset-settings" style="display: none">
+            <h3>Characters</h3>
+            <div class="control">
+              <select id="charset" aria-label="Character set">
+                <option value="detailed" selected>Detailed</option>
+                <option value="standard">Standard</option>
+                <option value="blocks">Blocks</option>
+                <option value="binary">Binary</option>
+                <option value="hex">Hex</option>
+                <option value="manual">Manual</option>
+              </select>
+            </div>
+            <div class="control" id="manualCharControl" style="display: none">
+              <input
+                type="text"
+                id="manualCharInput"
+                maxlength="1"
+                value="0"
+                placeholder="Character"
+                aria-label="Custom character" />
+            </div>
+          </section>
+
+          <section class="control-group edge-detection-settings" style="display: none">
+            <h3>Edge Detection</h3>
+            <div class="control">
+              <select id="edgeMethod" aria-label="Edge detection method">
+                <option value="none" selected>None</option>
+                <option value="sobel">Sobel</option>
+                <option value="dog">DoG (Contour)</option>
+                <option value="canny">Canny</option>
+                <option value="clahe">CLAHE</option>
+                <option value="lbp">LBP (Texture)</option>
+              </select>
+            </div>
+
+            <div class="control" id="sobelThresholdControl" style="display: none">
+              <input
+                type="range"
+                id="edgeThreshold"
+                min="0"
+                max="255"
+                value="100"
+                aria-label="Sobel threshold" />
+              <span class="value-label" id="edgeThresholdVal">100</span>
+            </div>
+
+            <!-- DoG controls -->
+            <div class="control" id="dogThresholdControl" style="display: none">
+              <input
+                type="range"
+                id="dogEdgeThreshold"
+                min="0"
+                max="255"
+                value="100"
+                aria-label="DoG threshold" />
+              <span class="value-label" id="dogEdgeThresholdVal">100</span>
+            </div>
+
+            <div class="control" id="cannyThresholdControl" style="display: none">
+              <label for="cannyLowThreshold">Low Threshold:</label>
+              <input type="range" id="cannyLowThreshold" min="0" max="255" value="50" />
+              <span class="value-label" id="cannyLowThresholdVal">50</span>
+
+              <label for="cannyHighThreshold">High Threshold:</label>
+              <input type="range" id="cannyHighThreshold" min="0" max="255" value="150" />
+              <span class="value-label" id="cannyHighThresholdVal">150</span>
+
+              <label for="cannySigma">Sigma:</label>
+              <input type="range" id="cannySigma" min="0.5" max="5" step="0.1" value="1.4" />
+              <span class="value-label" id="cannySigmaVal">1.4</span>
+            </div>
+
+            <div class="control" id="claheControl" style="display: none">
+              <label for="claheTileSize">Tile Size:</label>
+              <input type="range" id="claheTileSize" min="4" max="64" value="8" />
+              <span class="value-label" id="claheTileSizeVal">8</span>
+
+              <label for="claheClipLimit">Clip Limit:</label>
+              <input type="range" id="claheClipLimit" min="1" max="20" step="0.1" value="4" />
+              <span class="value-label" id="claheClipLimitVal">4.0</span>
+            </div>
+
+            <div class="control" id="lbpControl" style="display: none">
+              <label for="lbpRadius">Radius:</label>
+              <input type="range" id="lbpRadius" min="1" max="5" step="0.5" value="1" />
+              <span class="value-label" id="lbpRadiusVal">1</span>
+
+              <label for="lbpNumPoints">Sampling Points:</label>
+              <input type="range" id="lbpNumPoints" min="4" max="16" step="4" value="8" />
+              <span class="value-label" id="lbpNumPointsVal">8</span>
+
+              <label>
+                <input type="checkbox" id="lbpUniform" />
+                <span>Use Uniform Patterns</span>
+              </label>
+            </div>
+          </section>
+
+          <section class="control-group display-settings" style="display: none">
+            <h3>Display</h3>
+            <div class="control">
+              <label for="zoom">Zoom:</label>
+              <input type="range" id="zoom" min="0" max="100" value="50" />
+              <span class="value-label" id="zoomVal">50%</span>
+            </div>
+            <div class="control">
+              <select id="theme" aria-label="Theme selection">
+                <option value="dark" selected>Dark Theme</option>
+                <option value="light">Light Theme</option>
+              </select>
+            </div>
+            <div class="control">
+              <button id="reset">Reset All</button>
+            </div>
+          </section>
+        </aside>
+
+        <main class="main-content">
+          <pre id="ascii-art" aria-label="ASCII art output"></pre>
+          <div class="main-controls">
+            <button id="copyBtn">Copy ASCII Art</button>
+            <button id="downloadBtn">Download PNG</button>
+            <button id="exportBtn">Export Animation</button>
+            <button id="exportVideoBtn">Export Video (4K MP4)</button>
+            <div id="exportProgress" style="display: none">
+              <div class="progress-bar">
+                <div class="progress-fill"></div>
+              </div>
+              <div class="progress-text" aria-live="polite">Rendering: 0%</div>
+            </div>
+          </div>
+
+          <div id="notification" class="notification" aria-live="polite" role="status">
+            <span id="notificationMessage">ASCII copied to clipboard</span>
+          </div>
+        </main>
+      </div>
+
+      <div
+        id="usageGuideModal"
+        class="modal"
+        aria-hidden="true"
+        role="dialog"
+        aria-labelledby="usageGuideTitle">
+        <div class="modal-content">
+          <span class="modal-close" aria-label="Close">&times;</span>
+          <h2 id="usageGuideTitle">Usage Guide</h2>
+          <div class="modal-body">
+            <p>
+              ASCIImotion converts images and videos to ASCII art through a series of configurable
+              transformations.
+            </p>
+
+            <h3>Basic Operation</h3>
+            <p>
+              Select a file using the file input. Images process immediately. Videos require frame
+              count selection and processing.
+            </p>
+            <p>
+              Frame count determines animation smoothness and processing time. Higher values
+              increase quality at the cost of performance.
+            </p>
+            <p>Once processed, video frames can be navigated or played as an animation.</p>
+
+            <h3>Parameters</h3>
+            <p>
+              <strong>Image:</strong>
+              Width controls character count per line. Brightness, contrast, and blur affect source
+              image.
+            </p>
+            <p>
+              <strong>Effects:</strong>
+              Invert reverses luminance. Skip options remove specific color values. Dithering
+              algorithms simulate gradients.
+            </p>
+            <p>
+              <strong>Characters:</strong>
+              Select predefined character sets or specify custom characters for mapping luminance
+              values.
+            </p>
+            <p>
+              <strong>Edge Detection:</strong>
+              Algorithms for extracting contours and textures from source material.
+            </p>
+            <p>
+              <strong>Display:</strong>
+              Zoom adjusts output size. Theme toggles between light and dark interfaces.
+            </p>
+
+            <h3>Resolution Control</h3>
+            <p>To increase the "resolution" (character count) of your ASCII art:</p>
+            <p>
+              1. Increase the
+              <strong>Width</strong>
+              setting to add more characters per line
+            </p>
+            <p>
+              2. Lower the
+              <strong>Zoom</strong>
+              setting to fit more characters on screen
+            </p>
+            <p>
+              This combination allows you to see more detail in your ASCII art while keeping it
+              visible on screen.
+            </p>
+
+            <h3>Export Options</h3>
+            <p>
+              Copy: Text to clipboard. PNG: High-resolution image. Animation: HTML/JS package.
+              Video: 4K MP4 file.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="aboutModal"
+        class="modal"
+        aria-hidden="true"
+        role="dialog"
+        aria-labelledby="aboutTitle">
+        <div class="modal-content">
+          <span class="modal-close" aria-label="Close">&times;</span>
+          <h2 id="aboutTitle">About</h2>
+          <div class="modal-body">
+            <p>
+              ASCIImotion is a text-based media conversion utility for transforming raster images
+              and video content into ASCII character representations.
+            </p>
+            <p>
+              Initially developed for creating the ASCII animation art featured on the landing page
+              of Gx2 Studio. Based on Monospace by
+              <a href="https://mishkadoing.com" target="_blank" rel="noopener">Mike Bespalov</a>
+              .
+            </p>
+            <p>
+              All processing occurs client-side. No data is transmitted to remote servers. Older or
+              less powerful systems may experience performance limitations when processing lengthy
+              videos or high-resolution images.
+            </p>
+            <p>Released under MIT License.</p>
+          </div>
+        </div>
+      </div>
+
+      <footer class="page-footer">
+        <div class="footer-left">
+          <a href="#" class="footer-link" id="usageGuideLink">USAGE GUIDE</a>
+          <a href="#" class="footer-link" id="aboutLink">ABOUT</a>
+          <a
+            href="https://github.com/Gx2-Studio/asciimotion/issues"
+            target="_blank"
+            rel="noopener"
+            class="footer-link">
+            REPORT A BUG
+          </a>
+          <a
+            href="https://github.com/Gx2-Studio/asciimotion"
+            target="_blank"
+            rel="noopener"
+            class="footer-link">
+            SOURCE
+          </a>
+        </div>
+        <span class="footer-separator">|</span>
+        <div class="footer-right">
+          <a href="https://gx2-studio.com" target="_blank" rel="noopener" class="studio-link">
+            Made by Gx2 Studio
+          </a>
+          <a href="https://mishkadoing.com" target="_blank" rel="noopener" class="studio-link">
+            based on Monospace by Mike Bespalov
+          </a>
+        </div>
+      </footer>
+    </div>
+
+    <canvas id="canvas" style="display: none"></canvas>
+
+    <div id="frameTooltip" class="tooltip" role="tooltip" aria-hidden="true">
+      <strong>Frame Selection Guide</strong>
+      <p>Higher frame count creates smoother animation but increases processing time.</p>
+      <p>Lower frame count processes faster but may result in choppier playback.</p>
+      <p>The recommended value balances quality and performance based on video length.</p>
+      <p>
+        Short videos (under 30s): 240-720 frames is typically optimal for smooth 24fps playback.
+      </p>
+      <p>
+        Longer videos: Consider using 1 frame per 2-4 frames of source material for best quality.
+      </p>
+    </div>
+
+    <script src="js/core.js"></script>
+    <script src="js/imageProcessing.js"></script>
+    <script src="js/videoProcessing.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/eventHandlers.js"></script>
+  </body>
+</html>

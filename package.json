@@ -1,0 +1,20 @@
+{
+  "name": "ascii-animation-generator",
+  "version": "1.0.0",
+  "description": "ASCII Animation Generator",
+  "scripts": {
+    "format": "prettier --write \"**/*.{js,json,css,html}\"",
+    "format:js": "prettier --write \"js/**/*.js\"",
+    "format:html": "prettier --write \"**/*.html\"",
+    "format:css": "prettier --write \"**/*.css\"",
+    "lint": "eslint --fix js/*.js",
+    "format-all": "npm run format && npm run lint",
+    "format-js": "npm run format:js && npm run lint",
+    "format-compact": "prettier --write \"js/**/*.js\" && eslint --fix --max-warnings=0 js/*.js"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.1.1"
+  }
+}
