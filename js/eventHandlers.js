@@ -345,6 +345,28 @@ document.getElementById('exportVideoBtn').addEventListener('click', async () => 
     btn.textContent = originalText
   }
 })
+document.getElementById('exportGIFBtn').addEventListener('click', async () => {
+  if (!isVideoLoaded || asciiFrames.length === 0) {
+    showNotification('Nothing to export, please load a video first');
+    return;
+  }
+  
+  const btn = document.getElementById('exportGIFBtn');
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Exporting GIF...';
+  
+  try {
+    await exportGIF();
+    // Notification will be shown by the exportGIF function when complete
+  } catch (error) {
+    console.error('Error exporting GIF:', error);
+    showNotification('Failed to export GIF');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+})
 document.getElementById('reset').addEventListener('click', () => {
   document.getElementById('asciiWidth').value = 150
   document.getElementById('asciiWidthVal').textContent = 150

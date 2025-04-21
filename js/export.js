@@ -385,3 +385,91 @@ function exportAnimationFiles () {
       showNotification('Failed to create ZIP file. Check console for details.')
     })
 }
+
+/**
+ * Exports the animation as a GIF file.
+ * @returns {Promise<void>}
+ */
+async function exportGIF() {
+  console.log('exportGIF function called in export.js');
+  const currentFrameIdx = currentFrameIndex;
+  const capturedFrames = [];
+  const previewElement = document.getElementById('ascii-art');
+  const wasPlaying = isPlaying;
+  
+  if (isPlaying) {
+    console.log('Animation was playing, pausing it');
+    clearInterval(animationInterval);
+    isPlaying = false;
+  }
+
+  if (settingsChangedWhilePaused) {
+    console.log('Settings changed while paused, regenerating frames');
+    showNotification('Regenerating frames before export...');
+    await processAllFrames();
+    settingsChangedWhilePaused = false;
+  }
+
+  console.log('Capturing all frames, total frames:', asciiFrames.length);
+  // Capture all frames
+  for (let i = 0; i < asciiFrames.length; i++) {
+    displayFrame(i);
+    const frameContent = previewElement.textContent;
+    capturedFrames.push(frameContent);
+    await new Promise(resolve => setTimeout(resolve, 10));
+  }
+  console.log('Captured', capturedFrames.length, 'frames');
+  
+  // Restore the current frame and playback state
+  console.log('Restoring to frame', currentFrameIdx);
+  displayFrame(currentFrameIdx);
+  if (wasPlaying) {
+    console.log('Restoring playback state');
+    togglePlayback();
+  }
+
+  try {
+    // Get export options
+    const isDarkTheme = document.getElementById('theme').value === 'dark';
+    const fps = parseInt(document.getElementById('playbackSpeed').value, 10);
+    const fontSize = parseInt(document.getElementById('zoom').value, 10);
+    
+    console.log('Calculating dimensions based on content');
+    // Calculate optimal dimensions based on the content
+    const sampleFrame = capturedFrames[0];
+    const lines = sampleFrame.split('\n');
+    const lineCount = lines.length;
+    const maxLineLength = Math.max(...lines.map(line => line.length));
+    console.log('Frame dimensions:', 'lines:', lineCount, 'max line length:', maxLineLength);
+    
+    // Set export options with improved quality
+    const options = {
+      width: 1200,
+      height: 900,
+      quality: 5,  // Lower is better quality in GIFEncoder (1-30)
+      repeat: 0,
+      fps: fps,
+      backgroundColor: isDarkTheme ? '#000000' : '#ffffff',
+      textColor: isDarkTheme ? '#ffffff' : '#000000',
+      fontFamily: '"Courier New", monospace',
+      fontSize: fontSize / 100 * 20, // Increased from 16 for better readability
+      filename: `ascii-animation-hq-${new Date().toISOString().slice(0,10)}.gif`
+    };
+    console.log('Using high-quality export options:', options);
+    console.log('Export options:', options);
+
+    // Download the GIF
+    console.log('Calling downloadGIF with', capturedFrames.length, 'frames');
+    try {
+      await downloadGIF(capturedFrames, options);
+      console.log('downloadGIF completed successfully');
+    } catch (downloadError) {
+      console.error('Error in downloadGIF:', downloadError);
+      throw downloadError; // Re-throw to be caught by the outer try-catch
+    }
+    
+  } catch (error) {
+    console.error('Error exporting GIF:', error);
+    showNotification('Failed to export GIF. Check console for details.');
+  }
+}
